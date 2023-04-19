@@ -21,23 +21,28 @@ Here are some helpful queries to analyse the data/link it up
 
 Blocks I looked at - 28112 DS Block for Rewards and 2811300-2811399 for TX
 - To get the mining transactions and wallets that are sent zil from the miners
+
 select t.toaddress, count(*) from public."DSBlockMinerInfo" ds
 join public."Transactions" t on ds.walletpublickey = t.senderpublickey
 group by t.toaddress
 
 - Transactions in the 100 block that are zil only tx but not all related to mining.
+
 select * from public."DSBlockMinerInfo" ds
 right join public."Transactions" t on ds.walletpublickey = t.senderpublickey
 where ds.dscommittee is null
 
 - Count of miners in the block
+
 select count (*) from "DSBlockMinerInfo"  where dsblock = xxx
 
 - Average amount for the miners tx
+
 select avg(t.amount) from public."DSBlockMinerInfo" ds
 join public."Transactions" t on ds.walletpublickey = t.senderpublickey
 
 - Grouping the tx bewteen 40 and 60 zil that werent part of that blocks rewards
+
 select t.toaddress, count(*) from public."DSBlockMinerInfo" ds
 right join public."Transactions" t on ds.walletpublickey = t.senderpublickey
 where ds.dscommittee is null and t.amount > 40 and t.amount < 60
@@ -45,6 +50,7 @@ group by t.toaddress
 order by count(*)
 
 - Excluding the 5 main wallets, looking at the sender of these rather than toaddress
+
 select t.senderaddress, count(*) from public."DSBlockMinerInfo" ds
 right join public."Transactions" t on ds.walletpublickey = t.senderpublickey
 where ds.dscommittee is null and t.amount > 40 and t.amount < 60 and t.toaddress
@@ -57,9 +63,11 @@ group by t.senderaddress
 order by count(*)
 
 - Total NonContract TX in the 100 blocks
+
 select count(*) from "Transactions"
 
 - Total NonContract TX in the 100 blocks not to the 6 main mining addresses
+
 select count(*) from "Transactions"
 where senderaddress in ('zil1n6yhtv9zrlts8raqhgnr5r2dhyfmyel8egm87c',
 zil12chmjxuhs2alj0m2zngu3tjxl2t95zweynx8sl',
@@ -76,6 +84,7 @@ zil15xvtse0rvcfwxetstvun72kw5daz8kge0frn3y',
 zil1s5zg376kx586q72dlum497heexkxqdygsr8jpx')
 
 - Of what tx are remaining, group by sending address
+
 select senderaddress, count(*) from "Transactions"
 where senderaddress not in ('zil1n6yhtv9zrlts8raqhgnr5r2dhyfmyel8egm87c',
 zil12chmjxuhs2alj0m2zngu3tjxl2t95zweynx8sl',
